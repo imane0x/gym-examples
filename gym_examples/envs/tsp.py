@@ -8,7 +8,7 @@ class TSPEnvironment(gym.Env):
     def __init__(self, num_cities):
         super(TSPEnvironment, self).__init__()
         self.num_cities = num_cities
-        self.city_coordinates = np.random.rand(num_cities, 2) * 100  # Random 2D coordinates for cities
+        self.city_coordinates = np.random.rand(num_cities, 2)   # Random 2D coordinates for cities
         self.distance_matrix = self.calculate_distance_matrix()
 
         self.current_city = 0
@@ -35,7 +35,7 @@ class TSPEnvironment(gym.Env):
 
     def step(self, action):
         if action not in self.visited_cities:
-            reward = -self.distance_matrix[self.current_city, action]
+            reward = self.distance_matrix[self.current_city, action]
             self.visited_cities.add(action)
             self.current_city = action
         else:
@@ -54,6 +54,15 @@ class TSPEnvironment(gym.Env):
 
         return next_state, reward, done, {}
 
-    def render(self, mode='human'):
-        plt.show()
+def render(self, mode='human'):
+    plt.figure(figsize=(6, 6))
+    plt.scatter(self.city_coordinates[:, 0], self.city_coordinates[:, 1], color='blue', label='Cities')
+    plt.scatter(self.city_coordinates[self.current_city, 0], self.city_coordinates[self.current_city, 1], color='red', label='Current City')
+    plt.legend()
+    plt.title('Traveling Salesman Problem')
+    plt.xlabel('X-coordinate')
+    plt.ylabel('Y-coordinate')
+    plt.grid(True)
+    plt.show()
+
 
