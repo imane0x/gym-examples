@@ -18,8 +18,7 @@ class TSPEnvironment(gym.Env):
         self.action_space = spaces.Discrete(num_cities)
         self.observation_space = spaces.Box(low=0, high=100, shape=(2,), dtype=np.float32)
 
-        # Visualization
-        # self.fig, self.ax = plt.subplots()
+      
 
     def reset(self):
         self.current_city = 0
@@ -45,26 +44,12 @@ class TSPEnvironment(gym.Env):
         # next_state = self.city_coordinates[self.current_city]
         next_state = self.current_city
 
-        # self.ax.clear()
-        # self.ax.scatter(self.city_coordinates[:, 0], self.city_coordinates[:, 1], color='blue', label='Cities')
-        # self.ax.scatter(*next_state, color='green' if not done else 'red', marker='*' if not done else 'x', s=200, label='Next City')
-        # if not done:
-        #     self.ax.scatter(*self.city_coordinates[[list(self.visited_cities)[0]]].T, color='orange', marker='o', s=200, label='Start City')
-        # self.ax.legend()
-        # plt.pause(1)  # To give time for visualization
+
 
         return next_state, reward, done, {}
 
 def render(self, mode='human'):
-    # plt.figure(figsize=(6, 6))
-    # plt.scatter(self.city_coordinates[:, 0], self.city_coordinates[:, 1], color='blue', label='Cities')
-    # plt.scatter(self.city_coordinates[self.current_city, 0], self.city_coordinates[self.current_city, 1], color='red', label='Current City')
-    # plt.legend()
-    # plt.title('Traveling Salesman Problem')
-    # plt.xlabel('X-coordinate')
-    # plt.ylabel('Y-coordinate')
-    # plt.grid(True)
-    # plt.show()
+
 
 
 
