@@ -19,7 +19,7 @@ class TSPEnvironment(gym.Env):
         self.observation_space = spaces.Box(low=0, high=100, shape=(2,), dtype=np.float32)
 
         # Visualization
-        self.fig, self.ax = plt.subplots()
+        # self.fig, self.ax = plt.subplots()
 
     def reset(self):
         self.current_city = 0
