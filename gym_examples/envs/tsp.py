@@ -15,8 +15,8 @@ class TSPEnvironment(gym.Env):
         self.visited_cities = set([0])  # Set to keep track of visited cities
 
         # Gym spaces
-        #self.action_space = spaces.Discrete(num_cities)
-        #self.observation_space = spaces.Box(low=0, high=100, shape=(2,), dtype=np.float32)
+        self.action_space = spaces.Discrete(num_cities)
+        self.observation_space = spaces.Box(low=0, high=100, shape=(2,), dtype=np.float32)
 
       
 
