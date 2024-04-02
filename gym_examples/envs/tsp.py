@@ -48,7 +48,7 @@ class TSPEnvironment(gym.Env):
 
         return next_state, reward, done, {}
 
-def render(self, mode='human'):
+
 
 
 
