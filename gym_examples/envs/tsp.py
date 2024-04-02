@@ -23,7 +23,8 @@ class TSPEnvironment(gym.Env):
     def reset(self):
         self.current_city = 0
         self.visited_cities = set([0])
-        return self.city_coordinates[self.current_city]
+        #return self.city_coordinates[self.current_city]
+        return self.current_city
 
     def calculate_distance_matrix(self):
         distances = np.zeros((self.num_cities, self.num_cities))
