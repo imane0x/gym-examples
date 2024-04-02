@@ -46,7 +46,7 @@ class TSPEnvironment(gym.Env):
 
 
 
-        return next_state, reward, done, {}
+        return next_state, reward, done
 
 
 
