@@ -14,7 +14,7 @@ class TSPEnvironment(gym.Env):
 
         self.current_city = 0
         self.visited_cities = set([0])  # Set to keep track of visited cities
-
+        self.optimal_tour = self.get_optimal_tour()
         # Gym spaces
         self.action_space = spaces.Discrete(num_cities)
         self.observation_space = spaces.Box(low=0, high=100, shape=(2,), dtype=np.float32)
