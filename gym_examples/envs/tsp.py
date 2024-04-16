@@ -18,7 +18,7 @@ class TSPEnvironment(gym.Env):
         # Gym spaces
         self.action_space = spaces.Discrete(num_cities)
         self.observation_space = spaces.Box(low=0, high=100, shape=(2,), dtype=np.float32)
-
+        self.city_ids  = list(range(1, num_cities + 1))
       
 
     def reset(self):
@@ -40,9 +40,14 @@ class TSPEnvironment(gym.Env):
             self.visited_cities.add(action)
             self.current_city = action
         else:
-            reward = -self.distance_matrix[self.current_city, action]  # Penalize revisiting a city
+            reward = -self.distance_matrix[self.current_city, action]-1000  # Penalize revisiting a city
+
 
         done = len(self.visited_cities) == self.num_cities
+        if done:
+            missing_ids = [city_id for city_id in self.city_ids if city_id not in self.visited_cities]
+            if not missing_ids:
+                reward= 1000
         # next_state = self.city_coordinates[self.current_city]
         next_state = self.current_city
 
@@ -67,6 +72,3 @@ class TSPEnvironment(gym.Env):
         optimal_reward = sum(self.distance_matrix[self.optimal_tour[i], self.optimal_tour[i+1]] for i in range(len(self.optimal_tour)-1))
         optimal_reward += self.distance_matrix[self.optimal_tour[-1], self.optimal_tour[0]]  
         return optimal_reward
-
-
-
