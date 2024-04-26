@@ -34,24 +34,52 @@ class TSPEnvironment(gym.Env):
                 distances[i, j] = np.linalg.norm(self.city_coordinates[i] - self.city_coordinates[j])
         return distances
 
-    def step(self, action):
+    # def step(self, action):
+    #     if action not in self.visited_cities:
+    #         reward = self.distance_matrix[self.current_city, action]
+    #         self.visited_cities.add(action)
+    #         self.current_city = action
+    #     else:
+    #         reward = -self.distance_matrix[self.current_city, action]  # Penalize revisiting a city
+
+
+    #     done = len(self.visited_cities) == self.num_cities
+    #     if done:
+    #         missing_ids = [city_id for city_id in self.city_ids if city_id not in self.visited_cities]
+    #         if not missing_ids:
+    #             reward= 10*self.num_cities
+    #         else:
+    #             reward = -10 * len(missing_ids)
+    #     next_state = self.current_city
+    #     return next_state, reward, done, {}
+    def step(self, action,i):
         if action not in self.visited_cities:
             reward = self.distance_matrix[self.current_city, action]
             self.visited_cities.add(action)
             self.current_city = action
+            self.total_length = self.total_length + self.distance_matrix[self.current_city, action]
         else:
             reward = -self.distance_matrix[self.current_city, action]  # Penalize revisiting a city
 
-
-        done = len(self.visited_cities) == self.num_cities
-        if done:
-            missing_ids = [city_id for city_id in self.city_ids if city_id not in self.visited_cities]
-            if not missing_ids:
-                reward= 10*self.num_cities
-            else:
+        if i<250:
+          done = len(self.visited_cities) == self.num_cities
+          if done:
+              self.total_length = 0 
+              missing_ids = [city_id for city_id in self.city_ids if city_id not in self.visited_cities]
+              if not missing_ids:
+                  reward= 10*self.num_cities
+              else:
                 reward = -10 * len(missing_ids)
-        next_state = self.current_city
-        return next_state, reward, done, {}
+        else:
+          if self.total_length ==15:
+             missing_ids = [city_id for city_id in self.city_ids if city_id not in self.visited_cities]
+             if not missing_ids:
+              reward= 10*self.num_cities
+             else:
+              reward = -10 * len(missing_ids)
+       # next_state = self.city_coordinates[self.current_city]
+     #   return self.city_coordinates[self.current_city], reward,done {}
+        return action, reward,True,{}
     def get_optimal_tour(self):
         points = list(range(self.num_cities))
         all_distances = self.distance_matrix
