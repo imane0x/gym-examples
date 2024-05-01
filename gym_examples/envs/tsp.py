@@ -39,7 +39,7 @@ class TSPEnvironment(gym.Env):
             reward = self.distance_matrix[self.current_city, action]
             self.visited_cities.add(action)
             self.current_city = action
-        else if action == self.current_city:
+        elif action == self.current_city:
             reward = -self.distance_matrix[self.current_city, action]-100# Penalize revisiting a city
         else:
             reward = -self.distance_matrix[self.current_city, action]
