@@ -8,3 +8,7 @@ register(
     id="gym_examples/TSP-v0",
     entry_point="gym_examples.envs:TSPEnvironment",
 )
+register(
+    id="gym_examples/Nqueens-v0",
+    entry_point="gym_examples.envs:NQueensEnv",
+)
