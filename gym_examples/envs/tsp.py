@@ -9,7 +9,7 @@ class TSPEnvironment(gym.Env):
     def __init__(self, num_cities):
         super(TSPEnvironment, self).__init__()
         self.num_cities = num_cities
-        self.city_coordinates = np.random.rand(num_cities, 2)   # Random 2D coordinates for cities
+        self.city_coordinates = np.random.rand(num_cities, 2)*100   # Random 2D coordinates for cities
         self.distance_matrix = self.calculate_distance_matrix()
 
         self.current_city = 0
