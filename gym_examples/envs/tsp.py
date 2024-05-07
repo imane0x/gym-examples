@@ -36,7 +36,7 @@ class TSPEnvironment(gym.Env):
 
     def step(self, action):
         if action not in self.visited_cities:
-            reward = self.distance_matrix[self.current_city, action]
+            reward = 1/self.distance_matrix[self.current_city, action]+ 2 *self.distance_matrix[self.current_city, action]
             self.visited_cities.add(action)
             self.current_city = action
         elif action == self.current_city:
@@ -45,13 +45,13 @@ class TSPEnvironment(gym.Env):
             reward = -self.distance_matrix[self.current_city, action]
             
         done = len(self.visited_cities) == self.num_cities
-        if done:
-            missing_ids = [city_id for city_id in self.city_ids if city_id not in self.visited_cities]
-            if not missing_ids:
-                reward= 10*self.num_cities
-            else:
-                reward = -10 * len(missing_ids)
-        next_state = self.current_city
+        # if done:
+        #     missing_ids = [city_id for city_id in self.city_ids if city_id not in self.visited_cities]
+        #     if not missing_ids:
+        #         reward= 10*self.num_cities
+        #     else:
+        #         reward = -10 * len(missing_ids)
+        # next_state = self.current_city
         return next_state, reward, done, {}
 
     def get_optimal_tour(self):
