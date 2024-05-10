@@ -52,7 +52,7 @@ class TSPEnvironment(gym.Env):
         #         reward= 10*self.num_cities
         #     else:
         #         reward = -10 * len(missing_ids)
-        # next_state = self.current_city
+        next_state = self.current_city
         return next_state, reward, done, {}
 
     def get_optimal_tour(self):
