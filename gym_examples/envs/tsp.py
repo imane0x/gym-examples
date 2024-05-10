@@ -52,13 +52,14 @@ class TSPEnvironment(gym.Env):
             reward = -self.distance_matrix[self.current_city, action]
             
         done = len(self.visited_cities) == self.num_cities
+        next_state = self.current_city
         # if done:
         #     missing_ids = [city_id for city_id in self.city_ids if city_id not in self.visited_cities]
         #     if not missing_ids:
         #         reward= 10*self.num_cities
         #     else:
         #         reward = -10 * len(missing_ids)
-        next_state = self.current_city
+        
         return next_state, reward, done, {}
 
     def get_optimal_tour(self):
