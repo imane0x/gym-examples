@@ -10,13 +10,7 @@ class TSPEnvironment(gym.Env):
         super(TSPEnvironment, self).__init__()
         self.num_cities = num_cities
        # self.city_coordinates = np.random.rand(num_cities, 2)   # Random 2D coordinates for cities
-        self.city_coordinates = np.array([[74.4189681 , 95.88222463],[97.91924634, 26.7647098 ],[89.40244273, 43.41354983],
-       [ 4.71796792, 44.72775148],
-       [61.01492769, 68.26807401],
-       [48.98364615, 57.80284642],
-       [21.31618151, 72.72228662],
-       [43.96365988, 75.72628166],
-       [44.43814313, 75.54820857]])
+        self.city_coordinates = self.city_coordinates *100
         self.distance_matrix = self.calculate_distance_matrix()
 
         self.current_city = 0
