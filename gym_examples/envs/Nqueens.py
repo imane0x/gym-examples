@@ -10,6 +10,7 @@ class NQueensEnv(gym.Env):
         self.queens = [] 
         self.action_space = spaces.Discrete(n * n) 
         self.observation_space = spaces.Box(low=0, high=1, shape=(n, n), dtype=np.uint8) 
+        self.steps = 0
 
     def reset(self):
         self.board = np.zeros((self.n, self.n), dtype=int)
@@ -17,6 +18,7 @@ class NQueensEnv(gym.Env):
         return self.board
 
     def step(self, action):
+        self.steps = self.steps +1
         row = action // self.n
         col = action % self.n
 
@@ -29,7 +31,8 @@ class NQueensEnv(gym.Env):
         else:
             reward = -1
             done = False
-
+        if self.steps == 30:
+            done = True
         return self.board, reward, done, {}
 
     def is_valid_move(self, row, col):
