@@ -10,7 +10,7 @@ class TSPEnvironment(gym.Env):
         super(TSPEnvironment, self).__init__()
         self.num_cities = num_cities
         self.city_coordinates = np.random.rand(num_cities, 2)   # Random 2D coordinates for cities
-        self.city_coordinates = self.city_coordinates *100
+        #self.city_coordinates = self.city_coordinates *100
         self.distance_matrix = self.calculate_distance_matrix()
 
         self.current_city = 0
@@ -37,7 +37,8 @@ class TSPEnvironment(gym.Env):
 
     def step(self, action):
         if action not in self.visited_cities:
-            reward = 1/self.distance_matrix[self.current_city, action]+ 2 *self.distance_matrix[self.current_city, action]
+            reward = 1/self.distance_matrix[self.current_city, action]
+           # reward = 1/self.distance_matrix[self.current_city, action]+ 2 *self.distance_matrix[self.current_city, action]
             self.visited_cities.add(action)
             self.current_city = action
         elif action == self.current_city:
