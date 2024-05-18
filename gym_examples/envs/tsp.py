@@ -37,14 +37,14 @@ class TSPEnvironment(gym.Env):
 
     def step(self, action):
         if action not in self.visited_cities:
-            reward = 1/self.distance_matrix[self.current_city, action]
+            reward = 100/self.distance_matrix[self.current_city, action]
            # reward = 1/self.distance_matrix[self.current_city, action]+ 2 *self.distance_matrix[self.current_city, action]
             self.visited_cities.add(action)
             self.current_city = action
         elif action == self.current_city:
             reward = -self.distance_matrix[self.current_city, action]-100# Penalize revisiting a city
         else:
-            reward = -self.distance_matrix[self.current_city, action]
+            reward = -100*self.distance_matrix[self.current_city, action]
             
         done = len(self.visited_cities) == self.num_cities
         next_state = self.current_city
