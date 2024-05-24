@@ -14,7 +14,7 @@ class TSPEnvironment(gym.Env):
         self.distance_matrix = self.calculate_distance_matrix()
 
         self.current_city = 0
-        self.visited_cities = set([0])  # Set to keep track of visited cities
+        self.visited_cities = set([19])  # Set to keep track of visited cities
        # self.optimal_tour = self.get_optimal_tour()
         # Gym spaces
         self.action_space = spaces.Discrete(num_cities)
@@ -23,8 +23,8 @@ class TSPEnvironment(gym.Env):
       
 
     def reset(self):
-        self.current_city = 0
-        self.visited_cities = set([0])
+        self.current_city = 19
+        self.visited_cities = set([19])
         #return self.city_coordinates[self.current_city]
         return self.current_city
 
