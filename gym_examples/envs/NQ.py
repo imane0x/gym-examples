@@ -3,11 +3,11 @@ from gym import spaces
 import numpy as np
 import pygame
 
-class NQueensEnv(gym.Env):
+class NQ(gym.Env):
     metadata = {'render.modes': ['human']}
     
     def __init__(self, n=8):
-        super(NQueensEnv, self).__init__()
+        super(NQ, self).__init__()
         self.n = n
         self.board = np.zeros((n, n), dtype=int)
         self.action_space = spaces.Discrete(n * n)
