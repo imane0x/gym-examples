@@ -13,52 +13,59 @@ class NQ(gym.Env):
         self.action_space = spaces.Discrete(n * n)
         self.observation_space = spaces.Box(0, 1, shape=(n, n), dtype=int)
         self.cell_size = 50
+        self.current_step = 0
+        self.max_steps = 500
         self.width = self.cell_size * self.n
         self.height = self.cell_size * self.n
         self.render_mode = 'rgb_array'
         self.window = None
         self.clock = None
-
-    def reset(self, seed=None, options=None):
-        super().reset(seed=seed)
-        self.board = np.zeros((self.n, self.n), dtype=int)
-        if self.render_mode == "human":
-            self._render_frame()
-        return self.board
-
+      
+    def reset(self, **kwargs):
+        self.state = np.random.choice(self.n, size=self.n, replace=False)  # Random initial state
+        self.current_step = 0
+        if self.render_mode =="human":
+          self._render_frame()
+        return self.state, {}
+      
     def step(self, action):
-        row, col = divmod(action, self.n)
-        if self.board[row, col] == 1:
-            return self.board, -1, False, {}
-        
-        self.board[row, col] = 1
-        if self.is_goal_state():
-            return self.board, 1, True, {}
+        self.current_step= self.current_step +1
+        row = action % self.n
+        col = action // self.n
+        self.state[row] = col
+        reward = self.calculate_reward()
+        if reward == 0 or self.current_step >= self.max_steps:
+            done = True
         else:
-            return self.board, 0, False, {}
+          done  = False
+        return self.state, reward, done, False, {}
 
-    def is_goal_state(self):
-        for row in range(self.n):
-            for col in range(self.n):
-                if self.board[row, col] == 1 and not self.is_valid_position(row, col):
-                    return False
-        return np.sum(self.board) == self.n
 
-    def is_valid_position(self, row, col):
+    def calculate_reward(self):
+        # Initialize violations count
+        violations = 0
+        # Create sets to keep track of conflicts
+        row_set = set()
+        diag1_set = set()
+        diag2_set = set()
+
+        # Iterate through each queen
         for i in range(self.n):
-            if i != row and self.board[i, col] == 1:
-                return False
-            if i != col and self.board[row, i] == 1:
-                return False
-            if row + i < self.n and col + i < self.n and i != 0 and self.board[row + i, col + i] == 1:
-                return False
-            if row - i >= 0 and col - i >= 0 and i != 0 and self.board[row - i, col - i] == 1:
-                return False
-            if row + i < self.n and col - i >= 0 and i != 0 and self.board[row + i, col - i] == 1:
-                return False
-            if row - i >= 0 and col + i < self.n and i != 0 and self.board[row - i, col + i] == 1:
-                return False
-        return True
+            # Calculate positions on diagonals
+            diag1 = self.state[i] + i
+            diag2 = self.state[i] - i
+
+            # Check for conflicts
+            if self.state[i] in row_set or diag1 in diag1_set or diag2 in diag2_set:
+                violations += 1
+
+            # Update sets
+            row_set.add(self.state[i])
+            diag1_set.add(diag1)
+            diag2_set.add(diag2)
+
+        # Reward is negative number of violations
+        return -violations
 
     def render(self, mode='rgb_array'):
         # if mode is not None:
@@ -116,7 +123,8 @@ class NQ(gym.Env):
         self.window.blit(canvas, canvas.get_rect())
         pygame.display.update()
         self.clock.tick(30)  # Adjust FPS as needed
-
+    def is_terminal_state(self):
+        return self.calculate_reward() == 0  # Terminal state reached when there are no violations
     def close(self):
         if self.window is not None:
             pygame.quit()
