@@ -99,7 +99,7 @@ class NQ(gym.Env):
            )
         
         # Drawing gridlines
-        for x in range(self.n + 2):
+        for x in range(self.n ):
             pygame.draw.line(
                 canvas,
                 (0, 0, 0),
