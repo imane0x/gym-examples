@@ -90,7 +90,7 @@ class NQ(gym.Env):
         #                 ((col + 0.5) * pix_square_size, (row + 0.5) * pix_square_size),
         #                 pix_square_size // 3
         #             )
-        for col, row in enumerate(observation):
+        for col, row in enumerate(self.state):
             pygame.draw.circle(
             canvas,
             (0, 0, 0),
