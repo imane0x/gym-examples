@@ -2,38 +2,40 @@ import gym
 from gym import spaces
 import numpy as np
 import pygame
-from PIL import Image
-import io
 
 class NQ(gym.Env):
-    metadata = {'render_modes': ['human']}
+    metadata = {'render.modes': ['human', 'rgb_array']}
     
-    def __init__(self, n=8):
+    def __init__(self, n=8, render_mode='human'):
         super(NQ, self).__init__()
         self.n = n
         self.board = np.zeros((n, n), dtype=int)
         self.action_space = spaces.Discrete(n * n)
         self.observation_space = spaces.Box(0, 1, shape=(n, n), dtype=int)
-        self.screen = None
         self.cell_size = 50
         self.width = self.cell_size * self.n
         self.height = self.cell_size * self.n
+        self.render_mode = render_mode
+        self.window = None
+        self.clock = None
 
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)
         self.board = np.zeros((self.n, self.n), dtype=int)
-        return self.board, {}
+        if self.render_mode == "human":
+            self._render_frame()
+        return self.board
 
     def step(self, action):
         row, col = divmod(action, self.n)
         if self.board[row, col] == 1:
-            return self.board, -1, False, False, {}
+            return self.board, -1, False, {}
         
         self.board[row, col] = 1
         if self.is_goal_state():
-            return self.board, 1, True, False, {}
+            return self.board, 1, True, {}
         else:
-            return self.board, 0, False, False, {}
+            return self.board, 0, False, {}
 
     def is_goal_state(self):
         for row in range(self.n):
@@ -58,18 +60,15 @@ class NQ(gym.Env):
                 return False
         return True
 
-    def render(self):
-        if self.render_mode == "rgb_array":
+    def render(self, mode=None):
+        if mode is not None:
+            self.render_mode = mode
+        if self.render_mode == 'rgb_array':
             return self._render_frame()
-    
+        elif self.render_mode == 'human':
+            self._render_human()
+
     def _render_frame(self):
-        if self.window is None and self.render_mode == "human":
-            pygame.init()
-            pygame.display.init()
-            self.window = pygame.display.set_mode((self.width, self.height))
-        if self.clock is None and self.render_mode == "human":
-            self.clock = pygame.time.Clock()
-    
         canvas = pygame.Surface((self.width, self.height))
         canvas.fill((255, 255, 255))
         pix_square_size = self.cell_size  # The size of a single grid square in pixels
@@ -102,19 +101,23 @@ class NQ(gym.Env):
                 width=2,
             )
     
-        if self.render_mode == "human":
-            self.window.blit(canvas, canvas.get_rect())
-            pygame.event.pump()
-            pygame.display.update()
-            self.clock.tick(self.metadata["render_fps"])
-        else:  # rgb_array
-            return np.transpose(
-                np.array(pygame.surfarray.pixels3d(canvas)), axes=(1, 0, 2)
-            )
+        return np.transpose(
+            pygame.surfarray.array3d(canvas), axes=(1, 0, 2)
+        )
+
+    def _render_human(self):
+        if self.window is None:
+            pygame.init()
+            self.window = pygame.display.set_mode((self.width, self.height))
+        if self.clock is None:
+            self.clock = pygame.time.Clock()
     
+        canvas = self._render_frame()
+        self.window.blit(canvas, canvas.get_rect())
+        pygame.display.update()
+        self.clock.tick(30)  # Adjust FPS as needed
 
     def close(self):
-        if self.screen is not None:
+        if self.window is not None:
             pygame.quit()
-            self.screen = None
-
+            self.window = None
