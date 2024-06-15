@@ -7,7 +7,7 @@ class NQ(gym.Env):
     metadata = {'render.modes': ['human', 'rgb_array']}
     
     def __init__(self, n=8, render_mode='human'):
-        super(NQ, self).__init__()
+       # super(NQ, self).__init__()
         self.n = n
         self.board = np.zeros((n, n), dtype=int)
         self.action_space = spaces.Discrete(n * n)
