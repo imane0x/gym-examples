@@ -14,6 +14,6 @@ register(
 )
 
 register(
-    id="gym_examples/Nqueens",
+    id="gym_examples/NQ",
     entry_point="gym_examples.envs:NQ",
 )
