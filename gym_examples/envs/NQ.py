@@ -60,7 +60,7 @@ class NQ(gym.Env):
                 return False
         return True
 
-    def render(self, mode='rgb_array):
+    def render(self, mode='rgb_array'):
         # if mode is not None:
         #     self.render_mode = mode
         if self.render_mode == 'rgb_array':
