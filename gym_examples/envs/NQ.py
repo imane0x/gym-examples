@@ -2,9 +2,11 @@ import gym
 from gym import spaces
 import numpy as np
 import pygame
+from PIL import Image
+import io
 
 class NQ(gym.Env):
-    metadata = {'render.modes': ['human']}
+    metadata = {'render_modes': ['human']}
     
     def __init__(self, n=8):
         super(NQ, self).__init__()
@@ -17,20 +19,21 @@ class NQ(gym.Env):
         self.width = self.cell_size * self.n
         self.height = self.cell_size * self.n
 
-    def reset(self):
+    def reset(self, seed=None, options=None):
+        super().reset(seed=seed)
         self.board = np.zeros((self.n, self.n), dtype=int)
-        return self.board
+        return self.board, {}
 
     def step(self, action):
         row, col = divmod(action, self.n)
         if self.board[row, col] == 1:
-            return self.board, -1, False, {}
+            return self.board, -1, False, False, {}
         
         self.board[row, col] = 1
         if self.is_goal_state():
-            return self.board, 1, True, {}
+            return self.board, 1, True, False, {}
         else:
-            return self.board, 0, False, {}
+            return self.board, 0, False, False, {}
 
     def is_goal_state(self):
         for row in range(self.n):
@@ -58,7 +61,7 @@ class NQ(gym.Env):
     def render(self, mode='human'):
         if self.screen is None:
             pygame.init()
-            self.screen = pygame.display.set_mode((self.width, self.height))
+            self.screen = pygame.Surface((self.width, self.height))
 
         self.screen.fill((255, 255, 255))
         for row in range(self.n):
@@ -71,11 +74,13 @@ class NQ(gym.Env):
                 if self.board[row, col] == 1:
                     pygame.draw.circle(self.screen, (0, 0, 0), rect.center, self.cell_size // 3)
         
-        pygame.display.flip()
+        if mode == 'human':
+            image = pygame.surfarray.array3d(self.screen)
+            image = np.transpose(image, (1, 0, 2))  # Pygame (width, height, channels) -> Colab (height, width, channels)
+            return Image.fromarray(image)
 
     def close(self):
         if self.screen is not None:
             pygame.quit()
             self.screen = None
-
 
