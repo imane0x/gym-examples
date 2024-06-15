@@ -15,7 +15,7 @@ class NQ(gym.Env):
         self.cell_size = 50
         self.width = self.cell_size * self.n
         self.height = self.cell_size * self.n
-        self.render_mode = render_mode
+        self.render_mode = 'rgb_array'
         self.window = None
         self.clock = None
 
@@ -60,9 +60,9 @@ class NQ(gym.Env):
                 return False
         return True
 
-    def render(self, mode=None):
-        if mode is not None:
-            self.render_mode = mode
+    def render(self, mode='rgb_array):
+        # if mode is not None:
+        #     self.render_mode = mode
         if self.render_mode == 'rgb_array':
             return self._render_frame()
         elif self.render_mode == 'human':
