@@ -15,8 +15,8 @@ class NQ(gym.Env):
         self.cell_size = 50
         self.current_step = 0
         self.max_steps = 500
-        self.width = self.cell_size * self.n
-        self.height = self.cell_size * self.n
+        self.width = 1 + self.cell_size * self.n
+        self.height = 1 + self.cell_size * self.n
         self.render_mode = 'rgb_array'
         self.window = None
         self.clock = None
@@ -99,7 +99,7 @@ class NQ(gym.Env):
            )
         
         # Drawing gridlines
-        for x in range(self.n ):
+        for x in range(self.n+1):
             pygame.draw.line(
                 canvas,
                 (0, 0, 0),
