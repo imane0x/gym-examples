@@ -81,16 +81,23 @@ class NQ(gym.Env):
         pix_square_size = self.cell_size  # The size of a single grid square in pixels
     
         # Drawing the queens on the board
-        for row in range(self.n):
-            for col in range(self.n):
-                if self.board[row, col] == 1:
-                    pygame.draw.circle(
-                        canvas,
-                        (0, 0, 0),
-                        ((col + 0.5) * pix_square_size, (row + 0.5) * pix_square_size),
-                        pix_square_size // 3
-                    )
-    
+        # for row in range(self.n):
+        #     for col in range(self.n):
+        #         if self.board[row, col] == 1:
+        #             pygame.draw.circle(
+        #                 canvas,
+        #                 (0, 0, 0),
+        #                 ((col + 0.5) * pix_square_size, (row + 0.5) * pix_square_size),
+        #                 pix_square_size // 3
+        #             )
+        for col, row in enumerate(observation):
+            pygame.draw.circle(
+            canvas,
+            (0, 0, 0),
+            ((row + 0.5) * pix_square_size, (col + 0.5) * pix_square_size),
+            pix_square_size // 3
+           )
+        
         # Drawing gridlines
         for x in range(self.n + 1):
             pygame.draw.line(
