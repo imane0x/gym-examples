@@ -58,26 +58,60 @@ class NQ(gym.Env):
                 return False
         return True
 
-    def render(self, mode='human'):
-        if self.screen is None:
+    def render(self):
+        if self.render_mode == "rgb_array":
+            return self._render_frame()
+    
+    def _render_frame(self):
+        if self.window is None and self.render_mode == "human":
             pygame.init()
-            self.screen = pygame.Surface((self.width, self.height))
-
-        self.screen.fill((255, 255, 255))
+            pygame.display.init()
+            self.window = pygame.display.set_mode((self.width, self.height))
+        if self.clock is None and self.render_mode == "human":
+            self.clock = pygame.time.Clock()
+    
+        canvas = pygame.Surface((self.width, self.height))
+        canvas.fill((255, 255, 255))
+        pix_square_size = self.cell_size  # The size of a single grid square in pixels
+    
+        # Drawing the queens on the board
         for row in range(self.n):
             for col in range(self.n):
-                rect = pygame.Rect(col * self.cell_size, row * self.cell_size, self.cell_size, self.cell_size)
-                if (row + col) % 2 == 0:
-                    pygame.draw.rect(self.screen, (240, 240, 240), rect)
-                else:
-                    pygame.draw.rect(self.screen, (200, 200, 200), rect)
                 if self.board[row, col] == 1:
-                    pygame.draw.circle(self.screen, (0, 0, 0), rect.center, self.cell_size // 3)
-        
-        if mode == 'human':
-            image = pygame.surfarray.array3d(self.screen)
-            image = np.transpose(image, (1, 0, 2))  # Pygame (width, height, channels) -> Colab (height, width, channels)
-            return Image.fromarray(image)
+                    pygame.draw.circle(
+                        canvas,
+                        (0, 0, 0),
+                        ((col + 0.5) * pix_square_size, (row + 0.5) * pix_square_size),
+                        pix_square_size // 3
+                    )
+    
+        # Drawing gridlines
+        for x in range(self.n + 1):
+            pygame.draw.line(
+                canvas,
+                (0, 0, 0),
+                (0, pix_square_size * x),
+                (self.width, pix_square_size * x),
+                width=2,
+            )
+            pygame.draw.line(
+                canvas,
+                (0, 0, 0),
+                (pix_square_size * x, 0),
+                (pix_square_size * x, self.height),
+                width=2,
+            )
+    
+        if self.render_mode == "human":
+            self.window.blit(canvas, canvas.get_rect())
+            pygame.event.pump()
+            pygame.display.update()
+            self.clock.tick(self.metadata["render_fps"])
+        else:  # rgb_array
+            return np.transpose(
+                np.array(pygame.surfarray.pixels3d(canvas)), axes=(1, 0, 2)
+            )
+    
 
     def close(self):
         if self.screen is not None:
