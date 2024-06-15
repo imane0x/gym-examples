@@ -6,7 +6,7 @@ import pygame
 class NQ(gym.Env):
     metadata = {'render.modes': ['human', 'rgb_array']}
     
-    def __init__(self, n=8, render_mode='human'):
+    def __init__(self, n=8, render_mode='rgb_array'):
        # super(NQ, self).__init__()
         self.n = n
         self.board = np.zeros((n, n), dtype=int)
